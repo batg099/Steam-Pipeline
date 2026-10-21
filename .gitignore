@@ -1,0 +1,12 @@
+# Environnement Python
+.venv/
+__pycache__/
+
+# Base de données : elle est recréée à partir des fichiers JSON
+data/steam.duckdb
+data/steam.duckdb.wal
+
+# Fichiers générés par dbt
+steam_dbt/target/
+steam_dbt/logs/
+logs/

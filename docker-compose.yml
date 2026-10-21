@@ -1,0 +1,16 @@
+# Lance Airflow en local, dans un seul conteneur.
+# Démarrage : docker compose up --build
+# Interface :  http://localhost:8080
+
+services:
+  airflow:
+    build: .
+    command: standalone              # mode tout-en-un, prévu pour le développement local
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./dags:/opt/airflow/dags     # les DAGs
+      - .:/opt/airflow/project       # le projet (scripts, dbt, données)
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"                    # pas de DAGs d'exemple
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "true"    # pas de mot de passe en local
