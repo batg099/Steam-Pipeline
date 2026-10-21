@@ -1,4 +1,9 @@
-## Pipeline
+
+# Steam Data Pipeline
+
+Pipeline that collects the number of players and the news of 10 Steam games every hour.
+
+Goal: find out whether game updates bring players back.
 
 ```mermaid
 flowchart LR
@@ -9,11 +14,6 @@ flowchart LR
     E --> F[dbt]
     F --> G[game_overview]
 ```
-# Steam Data Pipeline
-
-Pipeline that collects the number of players and the news of 10 Steam games every hour.
-
-Goal: find out whether game updates bring players back.
 
 ## Steps
 
