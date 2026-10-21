@@ -1,3 +1,14 @@
+## Pipeline
+
+```mermaid
+flowchart LR
+    A[Steam API] --> B[collect.py]
+    B --> C[JSON files]
+    C --> D[load.py]
+    D --> E[(DuckDB)]
+    E --> F[dbt]
+    F --> G[game_overview]
+```
 # Steam Data Pipeline
 
 Pipeline that collects the number of players and the news of 10 Steam games every hour.
