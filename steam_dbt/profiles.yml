@@ -1,0 +1,6 @@
+steam:
+  outputs:
+    dev:
+      type: duckdb
+      path: data/steam.duckdb
+  target: dev

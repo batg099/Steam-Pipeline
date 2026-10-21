@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: stg_players
+    columns:
+      - name: player_count
+        data_tests: [not_null]
+
+  - name: stg_news
+    columns:
+      - name: news_id
+        data_tests: [unique]
+
+  - name: game_overview
+    columns:
+      - name: appid
+        data_tests: [unique]
