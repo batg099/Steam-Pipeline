@@ -1,0 +1,47 @@
+name: Pipeline Steam
+
+on:
+  schedule:
+    - cron: "7 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+
+      - name: Collecter les joueurs
+        run: python collect.py players
+
+      - name: Collecter les actualités (une fois par jour, ou en lancement manuel)
+        run: |
+          if [ "$(date -u +%H)" = "00" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python collect.py news
+          fi
+
+      - name: Charger dans DuckDB
+        run: python load.py
+
+      - name: Transformer avec dbt
+        run: dbt build --project-dir steam_dbt --profiles-dir steam_dbt
+
+      - name: Enregistrer les nouveaux fichiers dans le repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git commit -m "Collecte $(date -u +%Y-%m-%dT%H:%MZ)" || echo "Rien à enregistrer"
+          git push
