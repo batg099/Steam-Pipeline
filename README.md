@@ -1,23 +1,23 @@
 # Steam Data Pipeline
 
-Pipeline qui récupère toutes les heures le nombre de joueurs et les actualités de 10 jeux Steam.
+Pipeline that collects the number of players and the news of 10 Steam games every hour.
 
-Objectif : voir si une mise à jour fait revenir les joueurs.
+Goal: find out whether game updates bring players back.
 
-## Étapes
+## Steps
 
-1. `collect.py` : récupère les données de l'API Steam et les enregistre en JSON
-2. `load.py` : charge les fichiers JSON dans DuckDB
-3. `steam_dbt/` : nettoie les données et crée une table de synthèse par jeu
-4. GitHub Actions : lance tout automatiquement toutes les heures
+1. `collect.py`: fetches data from the Steam API and saves it as JSON
+2. `load.py`: loads the JSON files into DuckDB
+3. `steam_dbt/`: cleans the data and builds a summary table per game
+4. GitHub Actions: runs everything automatically every hour
 
-Un DAG Airflow (`dags/`) permet aussi de lancer le pipeline en local avec Docker.
+An Airflow DAG (`dags/`) can also run the pipeline locally with Docker.
 
 ## Stack
 
 Python, DuckDB, SQL, dbt, GitHub Actions, Airflow, Docker
 
-## Lancer le projet
+## Run the project
 
 ```bash
 pip install -r requirements.txt
@@ -27,10 +27,10 @@ python load.py
 dbt build --project-dir steam_dbt --profiles-dir steam_dbt
 ```
 
-Avec Airflow :
+With Airflow:
 
 ```bash
 docker compose up --build
 ```
 
-Puis ouvrir http://localhost:8080
+Then open http://localhost:8080
