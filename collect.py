@@ -6,6 +6,7 @@ Usage :
 """
 import json
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -28,11 +29,25 @@ URL_PLAYERS = "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPl
 URL_NEWS = "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/"
 
 
+def appeler_api(url, params):
+    """Appelle l'API. En cas d'erreur, réessaie jusqu'à 3 fois, puis renvoie None."""
+    for essai in range(1, 4):
+        try:
+            reponse = requests.get(url, params=params, timeout=30)
+            reponse.raise_for_status()
+            return reponse.json()
+        except requests.RequestException as erreur:
+            print(f"Essai {essai}/3 raté pour le jeu {params['appid']} : {erreur}")
+            time.sleep(10)
+    return None
+
+
 def collecter_joueurs():
     resultats = []
     for appid in JEUX:
-        reponse = requests.get(URL_PLAYERS, params={"appid": appid}, timeout=30)
-        resultats.append({"appid": appid, "reponse": reponse.json()})
+        data = appeler_api(URL_PLAYERS, {"appid": appid})
+        if data is not None:
+            resultats.append({"appid": appid, "reponse": data})
     return resultats
 
 
@@ -45,12 +60,17 @@ def collecter_actualites():
             "feeds": "steam_community_announcements",
             "maxlength": 300,
         }
-        reponse = requests.get(URL_NEWS, params=params, timeout=30)
-        resultats.append({"appid": appid, "reponse": reponse.json()})
+        data = appeler_api(URL_NEWS, params)
+        if data is not None:
+            resultats.append({"appid": appid, "reponse": data})
     return resultats
 
 
 def sauvegarder(source, resultats):
+    if not resultats:
+        print("Aucune donnée récupérée : rien à sauvegarder.")
+        sys.exit(1)
+
     maintenant = datetime.now(timezone.utc)
     dossier = Path("data") / source
     dossier.mkdir(parents=True, exist_ok=True)
