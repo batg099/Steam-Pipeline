@@ -77,4 +77,5 @@ Run the assistant (needs a Gemini API key in `.streamlit/secrets.toml`):
 streamlit run app.py
 ```
 
-**Try the AI assistant:** https://steam-assistant.streamlit.app
+**Try the AI assistant:** https://steam-assistant.streamlit.app 
+(may be unavailable if the free daily API quota has been reached)
