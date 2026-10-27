@@ -1,6 +1,8 @@
 # Steam Data Pipeline
 
-Pipeline that collects the number of players and the news of 10 Steam games every hour.
+**Try the AI assistant:** https://steam-assistant.streamlit.app
+
+Pipeline that collects the number of players and the news of 10 Steam games several times a day.
 
 Goal: find out whether game updates bring players back.
 
@@ -8,12 +10,21 @@ Goal: find out whether game updates bring players back.
 
 ```mermaid
 flowchart LR
-    A[Steam API] --> B[collect.py]
-    B --> C[JSON files]
-    C --> D[load.py]
-    D --> E[(DuckDB)]
-    E --> F[dbt]
-    F --> G[game_overview]
+    subgraph pipeline["Data pipeline"]
+        A[Steam API] --> B[Raw JSON files]
+        B --> C[(DuckDB)]
+        C --> D[Clean tables]
+    end
+
+    subgraph assistant["AI assistant"]
+        E[SQL agent] --> F[Checker]
+        F -->|retry| E
+        F --> G[Analyst]
+    end
+
+    D --> E
+    Q([Question]) --> E
+    G --> R([Answer])
 ```
 
 ## Steps
@@ -21,7 +32,7 @@ flowchart LR
 1. `collect.py`: fetches data from the Steam API and saves it as JSON
 2. `load.py`: loads the JSON files into DuckDB
 3. `steam_dbt/`: cleans the data and builds a summary table per game
-4. GitHub Actions: runs everything automatically every hour
+4. GitHub Actions: runs everything automatically on a schedule (about 5 times a day)
 
 An Airflow DAG (`dags/`) can also run the pipeline locally with Docker.
 
@@ -35,6 +46,10 @@ Three agents work together (`agents.py`):
 3. the analyst writes the answer
 
 Queries run on a read-only database, with no file access, and only `select` queries are allowed.
+
+Note: the assistant runs on the free tier of the Gemini API. If the daily quota is reached,
+it may be unavailable until the next day. Each visitor can ask up to 10 questions, and an answer
+usually takes 10 to 30 seconds, since three agents work on each question.
 
 ## Stack
 
