@@ -1,9 +1,10 @@
-
 # Steam Data Pipeline
 
 Pipeline that collects the number of players and the news of 10 Steam games every hour.
 
 Goal: find out whether game updates bring players back.
+
+## Pipeline
 
 ```mermaid
 flowchart LR
@@ -24,9 +25,20 @@ flowchart LR
 
 An Airflow DAG (`dags/`) can also run the pipeline locally with Docker.
 
+## AI assistant
+
+A web app (`app.py`, built with Streamlit) answers questions about the data in plain language.
+Three agents work together (`agents.py`):
+
+1. the SQL agent writes a query on the DuckDB database
+2. the checker validates the result, and sends the query back for correction if needed (3 attempts max)
+3. the analyst writes the answer
+
+Queries run on a read-only database, with no file access, and only `select` queries are allowed.
+
 ## Stack
 
-Python, DuckDB, SQL, dbt, GitHub Actions, Airflow, Docker
+Python, DuckDB, SQL, dbt, GitHub Actions, Airflow, Docker, LangChain, Gemini, Streamlit
 
 ## Run the project
 
@@ -45,3 +57,9 @@ docker compose up --build
 ```
 
 Then open http://localhost:8080
+
+Run the assistant (needs a Gemini API key in `.streamlit/secrets.toml`):
+
+```bash
+streamlit run app.py
+```
