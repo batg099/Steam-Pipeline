@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Récupérer le code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Installer Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -26,9 +26,9 @@ jobs:
       - name: Collecter les joueurs
         run: python collect.py players
 
-      - name: Collecter les actualités (une fois par jour, ou en lancement manuel)
+      - name: Collecter les actualités (si pas encore fait aujourd'hui)
         run: |
-          if [ "$(date -u +%H)" = "00" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if ! ls data/news/news_$(date -u +%Y%m%d)* > /dev/null 2>&1; then
             python collect.py news
           fi
 
