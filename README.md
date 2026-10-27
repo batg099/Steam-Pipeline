@@ -2,7 +2,7 @@
 
 Pipeline that collects the number of players and the updates of 10 Steam games several times a day.
 
-Goal: find out whether game updates bring players back.
+Goal: Ask questions about player activity in plain language, through an AI assistant built on top of the data.
 
 ## Pipeline
 
