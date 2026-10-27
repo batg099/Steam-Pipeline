@@ -1,7 +1,5 @@
 # Steam Data Pipeline
 
-**Try the AI assistant:** https://steam-assistant.streamlit.app
-
 Pipeline that collects the number of players and the news of 10 Steam games several times a day.
 
 Goal: find out whether game updates bring players back.
@@ -78,3 +76,5 @@ Run the assistant (needs a Gemini API key in `.streamlit/secrets.toml`):
 ```bash
 streamlit run app.py
 ```
+
+**Try the AI assistant:** https://steam-assistant.streamlit.app
