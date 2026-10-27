@@ -1,6 +1,6 @@
 # Steam Data Pipeline
 
-Pipeline that collects the number of players and the news of 10 Steam games several times a day.
+Pipeline that collects the number of players and the updates of 10 Steam games several times a day.
 
 Goal: find out whether game updates bring players back.
 
